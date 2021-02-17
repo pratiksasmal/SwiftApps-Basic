@@ -9,18 +9,17 @@
 import UIKit
 
 class ViewController: UIViewController {
-    /*let softTime = 300
-    let medTime = 430
-    let hardTime = 720*/
+    @IBOutlet weak var progressBar: UIProgressView!
+    
     var timer = Timer()
-    
     let eggTimes = ["Soft": 3,"Medium": 4, "Hard": 7]
-    
-    @IBOutlet weak var titleLabel: UILabel!
-    
     var secRemaining = 60
     
+        
+    @IBOutlet weak var titleLabel: UILabel!
+    
     @IBAction func hardnessSelected(_ sender: UIButton) {
+        progressBar.progress = 1.0
         
         timer.invalidate()
         let hardness = sender.currentTitle!
@@ -39,15 +38,5 @@ class ViewController: UIViewController {
             }
         }
         //print(eggTimes[hardness])
-        /*switch hardness {
-        case "Soft":
-            print(softTime)
-        case "Medium":
-            print(medTime)
-        case "Hard":
-            print(hardTime)
-        default:
-            print("error")*/
-    
 
 }
