@@ -5,7 +5,7 @@
 //  Created by Pratik Sasmal on 21/02/21.
 //  Copyright © 2021 The App Brewery. All rights reserved.
 //
-
+//contains all quiz content
 import Foundation
 
 struct QuizBrain {
@@ -39,6 +39,11 @@ struct QuizBrain {
     }
     func getQuestionText() -> String {
         return quiz[quesNum].text
+    }
+    
+    func getProgress() -> Float {
+        let progress = Float(quesNum) / Float(quiz.count)
+        return progress
     }
     
     mutating func nextQuestion() {

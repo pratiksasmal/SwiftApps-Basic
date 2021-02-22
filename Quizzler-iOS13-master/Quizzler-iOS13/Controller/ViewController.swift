@@ -38,16 +38,22 @@ class ViewController: UIViewController {
         }
         
         quizBrain.nextQuestion()
-
-        updateUI()
+        
+        Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
+        //updateUI()
     }
- @objc func updateUI(){
+    
+    
+    @objc func updateUI(){
         
         questionLabel.text = quizBrain.getQuestionText()
+        progressBar.progress = quizBrain.getProgress()
+        //both are talking to the model
         //questionLabel.text = quiz[quesNum][0]
         trueButton.backgroundColor = UIColor.clear
         falseButton.backgroundColor = UIColor.clear
         
     }
+    
 }
 
