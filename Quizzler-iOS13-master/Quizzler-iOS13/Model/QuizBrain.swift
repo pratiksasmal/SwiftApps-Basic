@@ -26,17 +26,27 @@ struct QuizBrain {
 
     ]
     var quesNum = 0
-    
-    func checkAnswer(_ userAnswer : String) -> Bool{
+    var score = 0
+    mutating func checkAnswer(_ userAnswer : String) -> Bool{
         //print(userAnswer)
         if userAnswer == quiz[quesNum].answer {
-            //right
+            score += 1
             return true
         }
         else {
             return false
         }
     }
+    
+    func getScore() -> Int {
+       /* if userAnswer == quiz[quesNum].answer {
+            return score
+        }
+        else {*/
+            return score
+       // }
+    }
+    
     func getQuestionText() -> String {
         return quiz[quesNum].text
     }
@@ -53,6 +63,7 @@ struct QuizBrain {
         // to make a loop of ques instead of stoppingafter last ques
         else {
             quesNum = 0
+            score = 0
         }
 
     }
