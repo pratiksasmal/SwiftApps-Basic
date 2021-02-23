@@ -9,7 +9,7 @@
 import UIKit
 
 class ResultViewController: UIViewController {
-
+    //this is 1
     var bmiValue: String? //setting as an optional string
     @IBOutlet weak var bmiLabel: UILabel!
     @IBOutlet weak var adviceLabel: UILabel!
@@ -17,7 +17,7 @@ class ResultViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        bmiLabel.text = bmiValue
+        bmiLabel.text = bmiValue //the value we see on screen
     }
     
     @IBAction func recalculatePressed(_ sender: UIButton) {
