@@ -53,6 +53,8 @@ class CalculateViewController: UIViewController {
             //"as" will perform downcasting.
             destinationVC.bmiValue = calculatorBrain.getBMIValue()
             //this connects to 1
+            destinationVC.advice = calculatorBrain.getAdvice()
+            destinationVC.color = calculatorBrain.getColor()
         }
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
