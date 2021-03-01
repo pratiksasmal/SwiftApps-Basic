@@ -9,9 +9,16 @@
 import Foundation
 import UIKit
 
+protocol WeatherManagerDelegate {
+    func didUpdateWeather(weather: WeatherModel)
+}
+
+
 struct WeatherManager {
     let weatherURL = "https://api.openweathermap.org/data/2.5/weather?appid=c7fbadf8b783c8024d75059cc91f617e&units=metric"
 
+    var delegate: WeatherManagerDelegate?
+    
     func fetch(cityName: String){
         let urlString = "\(weatherURL)&q=\(cityName)"
         //print(urlString)
@@ -29,7 +36,12 @@ struct WeatherManager {
                     return
                 }
                 if let safeData = data {
-                    self.parseJSON(weatherData: safeData)
+                    if let weather = self.parseJSON(weatherData: safeData){
+                        //let weatherVC = WeatherViewController()
+                        //weatherVC.didUpdateWeather(weather)
+                        delegate?.didUpdateWeather(weather: weather)
+                        //sending data back to WeatherViewCoer
+                    }
                 }
             }
             //4 start the task
@@ -37,22 +49,26 @@ struct WeatherManager {
         }
         
     }
-    func parseJSON(weatherData: Data){
+    func parseJSON(weatherData: Data) -> WeatherModel? {
         let decoder = JSONDecoder()
         do {
         let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
-            //print(decodedData.weather[0].id)
+            //if sucessfully parsed
             let id = decodedData.weather[0].id
             let temp = decodedData.main.temp
             let name = decodedData.name
             
             let weather = WeatherModel(conditionId: id, cityName: name, temperature: temp)
-            
             print(weather.conditionName)
             print(weather.temperatureString)
+            
+            return weather
+            
         }
         catch {
+            //if json not parsed
             print(error)
+            return nil
         }
     }
     
