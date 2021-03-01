@@ -57,7 +57,12 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
     }
     //to notify when the weather is available from net
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel){
-        //print(weather.temperature)
+        DispatchQueue.main.async {
+            
+            self.temperatureLabel.text = weather.temperatureString
+            //self as its closure
+            self.conditionImageView.image = UIImage(systemName: weather.conditionName)
+        }
     }
     func didFailWithError(error: Error) {
             print(error)
