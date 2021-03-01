@@ -15,31 +15,60 @@ struct WeatherManager {
     func fetch(cityName: String){
         let urlString = "\(weatherURL)&q=\(cityName)"
         //print(urlString)
-        performRequest(urlString: urlString)
+        self.performRequest(urlString: urlString)
     }
     func performRequest(urlString: String){
         //1 creating URl
         if let url = URL(string: urlString){
             //2 creating url session
             let session = URLSession(configuration: .default)
-            
-            //3 give the session a task
-            let task = session.dataTask(with: url, completionHandler: handle(data: response: error: ))
-            
+            //3 gives the session a task
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if error != nil {
+                    print(error!)
+                    return
+                }
+                if let safeData = data {
+                    self.parseJSON(weatherData: safeData)
+                }
+            }
             //4 start the task
             task.resume()
         }
         
     }
-    
-    func handle(data: Data?, response: URLResponse?, error: Error?){
-        if error != nil {
-            print(error!)
-            return
+    func parseJSON(weatherData: Data){
+        let decoder = JSONDecoder()
+        do {
+        let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
+            //print(decodedData.weather[0].id)
+            let id = decodedData.weather[0].id
+            print(getConditionName(weatherId: id))
         }
-        if let safeData = data {
-            let dataString = String(data: safeData, encoding: .utf8)
-            print(dataString)
+        catch {
+            print(error)
+        }
+    }
+    
+    func getConditionName(weatherId : Int) -> String{
+        switch weatherId {
+        case 200...232:
+            return "cloud.bolt"
+        case 300...321:
+            return "cloud.drizzle"
+        case 500...531:
+            return "cloud.rain"
+        case 600...622:
+            return "cloud.snow"
+        case 701...781:
+            return "cloud.fog"
+        case 800:
+            return "sun.max"
+        case 801...804:
+            return "cloud.bolt"
+        default:
+            return "cloud"
         }
     }
 }
+
