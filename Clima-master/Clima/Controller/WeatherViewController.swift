@@ -20,10 +20,9 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        //setting class as delegate
         weatherManager.delegate = self
         searchTextField.delegate = self
-        //self is current view controller
         //delegate notifies about taps on screen
     }
 
@@ -56,11 +55,14 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
         }
         searchTextField.text = ""
     }
-    
-    func didUpdateWeather(weather: WeatherModel){
-        print(weather.temperature)
+    //to notify when the weather is available from net
+    func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel){
+        //print(weather.temperature)
     }
-    
+    func didFailWithError(error: Error) {
+            print(error)
+            //print("x1")
+    }
     
 }
 

@@ -10,10 +10,11 @@ import Foundation
 import UIKit
 
 protocol WeatherManagerDelegate {
-    func didUpdateWeather(weather: WeatherModel)
+    func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel)
+    func didFailWithError(error: Error)
 }
 
-
+//weatherManager is reusable now
 struct WeatherManager {
     let weatherURL = "https://api.openweathermap.org/data/2.5/weather?appid=c7fbadf8b783c8024d75059cc91f617e&units=metric"
 
@@ -22,9 +23,9 @@ struct WeatherManager {
     func fetch(cityName: String){
         let urlString = "\(weatherURL)&q=\(cityName)"
         //print(urlString)
-        self.performRequest(urlString: urlString)
+        performRequest(with: urlString)
     }
-    func performRequest(urlString: String){
+    func performRequest(with urlString: String){
         //1 creating URl
         if let url = URL(string: urlString){
             //2 creating url session
@@ -32,15 +33,14 @@ struct WeatherManager {
             //3 gives the session a task
             let task = session.dataTask(with: url) { (data, response, error) in
                 if error != nil {
-                    print(error!)
+                    self.delegate?.didFailWithError(error: error!)
+                    //self cuz inside closure
                     return
                 }
                 if let safeData = data {
-                    if let weather = self.parseJSON(weatherData: safeData){
-                        //let weatherVC = WeatherViewController()
-                        //weatherVC.didUpdateWeather(weather)
-                        delegate?.didUpdateWeather(weather: weather)
-                        //sending data back to WeatherViewCoer
+                    if let weather = self.parseJSON(safeData){
+                        self.delegate?.didUpdateWeather(self, weather: weather)
+                        //sending data back to WeatherViewCoer to update the weather
                     }
                 }
             }
@@ -49,7 +49,7 @@ struct WeatherManager {
         }
         
     }
-    func parseJSON(weatherData: Data) -> WeatherModel? {
+    func parseJSON(_ weatherData: Data) -> WeatherModel? {
         let decoder = JSONDecoder()
         do {
         let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
@@ -59,15 +59,15 @@ struct WeatherManager {
             let name = decodedData.name
             
             let weather = WeatherModel(conditionId: id, cityName: name, temperature: temp)
-            print(weather.conditionName)
-            print(weather.temperatureString)
+           // print(weather.conditionName)
+           // print(weather.temperatureString)
             
             return weather
             
         }
         catch {
             //if json not parsed
-            print(error)
+            delegate?.didFailWithError(error: error)
             return nil
         }
     }
