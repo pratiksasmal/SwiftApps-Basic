@@ -15,6 +15,9 @@ class WeatherViewController: UIViewController{
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var searchTextField: UITextField!
+    @IBAction func locationButton(_ sender: UIButton) {
+    }
+    
     
     //var weatherManager = WeatherManager()
     var weatherManager = WeatherManager()
@@ -75,9 +78,11 @@ extension WeatherViewController: WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel){
         DispatchQueue.main.async {
             
+            //connecting to temp,image and city respectively of the app
             self.temperatureLabel.text = weather.temperatureString
             //self as its closure
             self.conditionImageView.image = UIImage(systemName: weather.conditionName)
+            self.cityLabel.text = weather.cityName
         }
     }
     func didFailWithError(error: Error) {
@@ -90,7 +95,15 @@ extension WeatherViewController: WeatherManagerDelegate {
 
 extension WeatherViewController: CLLocationManagerDelegate{
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("got location")
+        if let location = locations.last {
+            locationManager.stopUpdatingLocation()
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            weatherManager.fetchWeather(latitude: lat, longitude: lon)
+//            print(lat)
+//            print(lon)
+        }
+        //print("got location")
         
     }
     //didUpdateLocationDelegate
