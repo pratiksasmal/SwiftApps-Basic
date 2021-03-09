@@ -9,3 +9,6 @@ Magic-8-Ball-iOS13/.DS_Store
 EggTimer/.DS_Store
 Quizzler-iOS13-master/.DS_Store
 *.xcuserstate
+*.pbxuser
+*.perspective
+*.perspectivev3
